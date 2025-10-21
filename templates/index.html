@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visionary AI - Advanced Face Recognition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #0a0f1c;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(135deg, #0a0f1c, #101d42);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    nav h2 {
+      font-weight: 700;
+      font-size: 22px;
+      background: linear-gradient(90deg, #00f7ff, #38b6ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li {
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    nav ul li:hover {
+      color: #00f7ff;
+    }
+    nav button {
+      background: #00f7ff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #0a0f1c;
+      transition: 0.3s;
+    }
+    nav button:hover {
+      background: #38b6ff;
+    }
+
+    .hero {
+      text-align: center;
+      margin-top: 80px;
+    }
+    .hero h1 {
+      font-size: 60px;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #00f7ff, #38b6ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 20px;
+      opacity: 0.85;
+    }
+
+    .main-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      max-width: 1400px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    .camera-box {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0px 0px 30px rgba(0, 247, 255, 0.2);
+      position: relative;
+    }
+    .camera-box img {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      border: 2px solid #00f7ff;
+    }
+
+    .analytics-panel {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0px 0px 30px rgba(0, 247, 255, 0.2);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: rgba(0, 247, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      border: 1px solid rgba(0, 247, 255, 0.3);
+    }
+
+    .stat-number {
+      font-size: 2em;
+      font-weight: 700;
+      color: #00f7ff;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+
+    .status-indicator {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff4444;
+      animation: pulse 2s infinite;
+    }
+
+    .status-indicator.active {
+      background: #44ff44;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .controls-panel {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+    }
+
+    .control-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+
+    .slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #00f7ff;
+      cursor: pointer;
+    }
+
+    .recent-detections {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .detection-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .detection-status {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      font-weight: 600;
+    }
+
+    .detection-status.verified {
+      background: rgba(68, 255, 68, 0.2);
+      color: #44ff44;
+    }
+
+    .detection-status.unverified {
+      background: rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .buttons button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #00f7ff;
+      font-weight: bold;
+      transition: 0.3s;
+      color: #0a0f1c;
+    }
+    .buttons button:hover {
+      background: #38b6ff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 60px;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+
+  <nav>
+    <h2>VISIONARY AI</h2>
+    <ul>
+      <li>Home</li>
+      <li>Projects</li>
+      <li>API</li>
+      <li>About Us</li>
+    </ul>
+    <button>Login</button>
+  </nav>
+
+  <div class="hero">
+    <h1>VISIONARY AI</h1>
+    <p>Advanced Face Recognition & Analytics Platform</p>
+  </div>
+
+  <div class="main-container">
+    <div class="camera-box">
+      <div class="status-indicator" id="status-indicator"></div>
+      <img id="video-feed" src="{{ url_for('video') }}" alt="Video Stream">
+
+      <div class="buttons">
+        <form action="/start" method="post">
+          <button type="submit" id="start-btn">
+            <i class="fas fa-play"></i> Start Detection
+          </button>
+        </form>
+        <form action="/stop" method="post">
+          <button type="submit" id="stop-btn">
+            <i class="fas fa-stop"></i> Stop
+          </button>
+        </form>
+      </div>
+
+      <div class="controls-panel">
+        <h3><i class="fas fa-cog"></i> Detection Settings</h3>
+        
+        <div class="control-group">
+          <label for="tolerance-slider">Recognition Tolerance: <span id="tolerance-value">0.6</span></label>
+          <input type="range" id="tolerance-slider" class="slider" min="0.3" max="0.9" step="0.1" value="0.6">
+        </div>
+
+        <div class="control-group">
+          <label for="fps-slider">Target FPS: <span id="fps-value">30</span></label>
+          <input type="range" id="fps-slider" class="slider" min="10" max="60" step="5" value="30">
+        </div>
+
+        <div class="control-group">
+          <label>
+            <input type="checkbox" id="show-confidence" checked> Show Confidence Scores
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="analytics-panel">
+      <h3><i class="fas fa-chart-line"></i> Real-time Analytics</h3>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="total-detections">0</div>
+          <div class="stat-label">Total Detections</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="verified-count">0</div>
+          <div class="stat-label">Verified Faces</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="current-fps">0</div>
+          <div class="stat-label">Current FPS</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="accuracy-rate">0%</div>
+          <div class="stat-label">Accuracy Rate</div>
+        </div>
+      </div>
+
+      <h4><i class="fas fa-history"></i> Recent Detections</h4>
+      <div class="recent-detections" id="recent-detections">
+        <div class="detection-item">
+          <span>No detections yet</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button onclick="exportData()" style="background: #00f7ff; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; color: #0a0f1c; font-weight: bold;">
+          <i class="fas fa-download"></i> Export Analytics
+        </button>
+        <button onclick="clearData()" style="background: #ff4444; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; margin-left: 10px;">
+          <i class="fas fa-trash"></i> Clear Data
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Visionary AI | Built by Piyush
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    // Initialize particles
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 80 },
+        "size": { "value": 3 },
+        "move": { "speed": 2 },
+        "line_linked": { "enable": true, "color": "#00f7ff" }
+      }
+    });
+
+    // Analytics and real-time updates
+    let analytics = {
+      totalDetections: 0,
+      verifiedCount: 0,
+      recentDetections: [],
+      startTime: Date.now(),
+      isActive: false
+    };
+
+    // Update analytics display
+    function updateAnalytics() {
+      document.getElementById('total-detections').textContent = analytics.totalDetections;
+      document.getElementById('verified-count').textContent = analytics.verifiedCount;
+      
+      const accuracyRate = analytics.totalDetections > 0 
+        ? Math.round((analytics.verifiedCount / analytics.totalDetections) * 100)
+        : 0;
+      document.getElementById('accuracy-rate').textContent = accuracyRate + '%';
+
+      // Update recent detections
+      const recentContainer = document.getElementById('recent-detections');
+      if (analytics.recentDetections.length === 0) {
+        recentContainer.innerHTML = '<div class="detection-item"><span>No detections yet</span></div>';
+      } else {
+        recentContainer.innerHTML = analytics.recentDetections
+          .slice(-5)
+          .map(detection => `
+            <div class="detection-item">
+              <span>${detection.timestamp}</span>
+              <span class="detection-status ${detection.verified ? 'verified' : 'unverified'}">
+                ${detection.verified ? 'Verified' : 'Unverified'}
+              </span>
+            </div>
+          `).join('');
+      }
+    }
+
+    // Add detection to analytics
+    function addDetection(verified) {
+      analytics.totalDetections++;
+      if (verified) analytics.verifiedCount++;
+      
+      const timestamp = new Date().toLocaleTimeString();
+      analytics.recentDetections.push({
+        timestamp,
+        verified,
+        confidence: Math.random() * 0.4 + 0.6 // Mock confidence score
+      });
+
+      // Keep only last 50 detections
+      if (analytics.recentDetections.length > 50) {
+        analytics.recentDetections = analytics.recentDetections.slice(-50);
+      }
+
+      updateAnalytics();
+    }
+
+    // Simulate FPS updates
+    function updateFPS() {
+      const fps = analytics.isActive ? Math.floor(Math.random() * 20) + 15 : 0;
+      document.getElementById('current-fps').textContent = fps;
+    }
+
+    // Control handlers
+    document.getElementById('tolerance-slider').addEventListener('input', function(e) {
+      document.getElementById('tolerance-value').textContent = e.target.value;
+      // Send to backend
+      fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tolerance: parseFloat(e.target.value) })
+      });
+    });
+
+    document.getElementById('fps-slider').addEventListener('input', function(e) {
+      document.getElementById('fps-value').textContent = e.target.value;
+    });
+
+    // Start/Stop button handlers
+    document.getElementById('start-btn').addEventListener('click', function() {
+      analytics.isActive = true;
+      document.getElementById('status-indicator').classList.add('active');
+    });
+
+    document.getElementById('stop-btn').addEventListener('click', function() {
+      analytics.isActive = false;
+      document.getElementById('status-indicator').classList.remove('active');
+    });
+
+    // Export data function
+    function exportData() {
+      const data = {
+        ...analytics,
+        exportTime: new Date().toISOString(),
+        sessionDuration: Date.now() - analytics.startTime
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `face-detection-analytics-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Clear data function
+    function clearData() {
+      if (confirm('Are you sure you want to clear all analytics data?')) {
+        analytics.totalDetections = 0;
+        analytics.verifiedCount = 0;
+        analytics.recentDetections = [];
+        analytics.startTime = Date.now();
+        updateAnalytics();
+      }
+    }
+
+    // Simulate random detections for demo
+    setInterval(() => {
+      if (analytics.isActive && Math.random() < 0.3) {
+        addDetection(Math.random() < 0.7); // 70% verified rate
+      }
+    }, 2000);
+
+    // Update FPS every second
+    setInterval(updateFPS, 1000);
+
+    // Initialize
+    updateAnalytics();
+  </script>
+</body>
+</html>
