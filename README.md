@@ -247,13 +247,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [Flask](https://flask.palletsprojects.com/) web framework
 - [SQLite](https://www.sqlite.org/) database
 
-## 📞 Support
 
-For support and questions:
-- Create an issue on GitHub
-- Check the troubleshooting section
-- Review the API documentation
 
 ---
 
-**Built with ❤️ by Piyush**
+**Built by Piyush**
+
